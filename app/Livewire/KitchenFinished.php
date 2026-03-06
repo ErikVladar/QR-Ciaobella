@@ -11,8 +11,8 @@ class KitchenFinished extends Component
 
     public function render()
     {
-        $query = Order::where('payment_status', 'paid')
-            ->whereIn('status', ['completed', 'cancelled']);
+        // Show all finished orders regardless of payment status
+        $query = Order::whereIn('status', ['completed', 'cancelled']);
 
         if ($this->tableFilter !== '') {
             $query->where('table_number', $this->tableFilter);
@@ -29,7 +29,7 @@ class KitchenFinished extends Component
     {
         $order = Order::find($orderId);
         
-        if ($order && $order->payment_status === 'paid') {
+        if ($order) {
             $order->update([
                 'status' => $newStatus,
             ]);

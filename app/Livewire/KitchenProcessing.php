@@ -9,8 +9,8 @@ class KitchenProcessing extends Component
 {
     public function render()
     {
-        $processingOrders = Order::where('payment_status', 'paid')
-            ->where('status', 'processing')
+        // Show all processing orders (including unpaid counter orders)
+        $processingOrders = Order::where('status', 'processing')
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -23,7 +23,7 @@ class KitchenProcessing extends Component
     {
         $order = Order::find($orderId);
         
-        if ($order && $order->payment_status === 'paid') {
+        if ($order) {
             $order->update([
                 'status' => $newStatus,
             ]);

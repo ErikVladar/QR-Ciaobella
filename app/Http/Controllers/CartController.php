@@ -48,7 +48,7 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
-        return redirect()->route('cart.view');
+        return redirect()->back()->with('success', 'Produkt bol pridaný do košíka!');
     }
 
     // View cart

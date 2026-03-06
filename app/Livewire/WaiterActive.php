@@ -9,13 +9,16 @@ class WaiterActive extends Component
 {
     public function render()
     {
+        // Orders waiting for payment (counter payment, not yet paid)
         $toPay = Order::where('payment_status', 'unpaid')
             ->where('payment_method', 'counter')
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $ready = Order::where('payment_status', 'paid')
-            ->where('waiter_status', 'ready')
+        // Orders ready to serve (marked ready by kitchen, regardless of payment status)
+        // OR already paid and ready
+        $ready = Order::where('waiter_status', 'ready')
+            ->where('status', 'completed')
             ->orderBy('created_at', 'desc')
             ->get();
 

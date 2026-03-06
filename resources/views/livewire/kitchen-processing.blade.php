@@ -31,9 +31,17 @@
                             </div>
                         </div>
                         
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-yellow-100 text-yellow-800">
-                            <span class="w-2 h-2 rounded-full bg-yellow-600 animate-pulse"></span>
-                            SPRACOVÁVA SA
+                        <div class="flex gap-2 flex-wrap">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-yellow-100 text-yellow-800">
+                                <span class="w-2 h-2 rounded-full bg-yellow-600 animate-pulse"></span>
+                                SPRACOVÁVA SA
+                            </div>
+                            @if($order->payment_status === 'unpaid')
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-red-100 text-red-800">
+                                    <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                                    NEZAPLATENÉ
+                                </div>
+                            @endif
                         </div>
                     </div>
 
