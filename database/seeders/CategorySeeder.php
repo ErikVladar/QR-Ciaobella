@@ -10,7 +10,7 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Pizza', 'image_path' => 'imgs/pizza.png'],
+            ['name' => 'Pizza', 'image_path' => 'imgs/pizza.png', 'has_prilohy' => true],
             ['name' => 'Drinky', 'image_path' => 'imgs/drinks.png'],
             ['name' => 'Dezerty', 'image_path' => 'imgs/desserts.png'],
         ];

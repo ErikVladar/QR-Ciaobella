@@ -16,6 +16,10 @@ class RoleBasedLoginResponse implements LoginResponseContract, TwoFactorLoginRes
         /** @var Request $request */
         $user = $request->user();
 
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         if ($user && method_exists($user, 'isKitchen') && $user->isKitchen()) {
             return redirect()->route('kitchen.index');
         }

@@ -71,7 +71,7 @@
                                     
                                     @if($item->additions && $item->additions->count())
                                         <div class="mt-2 pl-3 border-l-2 border-green-400 bg-green-50/50 py-2 pr-2 rounded">
-                                            <div class="text-xs font-bold text-green-800 mb-1">✓ DOPLNKY:</div>
+                                            <div class="text-xs font-bold text-green-800 mb-1">✓ PRÍLOHY:</div>
                                             <ul class="space-y-1">
                                                 @foreach($item->additions as $add)
                                                     <li class="text-sm text-green-900 font-medium">• {{ $add->addition_name }}</li>

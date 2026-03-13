@@ -59,7 +59,7 @@
                                 
                                 @if($item->additions && $item->additions->count() > 0)
                                     <div class="ml-4 pl-3 border-l-2 border-green-400 bg-green-50 py-2 pr-2 rounded">
-                                        <p class="text-xs font-bold text-green-800 mb-1">✓ Doplnky:</p>
+                                        <p class="text-xs font-bold text-green-800 mb-1">✓ Prílohy:</p>
                                         <ul class="space-y-1">
                                             @foreach($item->additions as $addition)
                                                 <li class="text-sm text-green-900 flex justify-between">

@@ -44,7 +44,19 @@
     @auth
         <div x-show="open" @click.away="open = false" x-transition
             class="absolute top-full left-0 w-full bg-white shadow-md z-50 space-y-2 mt-1 p-4">
-            <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
+            @if(auth()->user()->isAdmin())
+                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-purple-100 rounded font-medium text-purple-600">Administrácia</a>
+                <a href="{{ route('admin.additions') }}" class="block px-4 py-2 hover:bg-amber-100 rounded font-medium text-amber-600">Prílohy</a>
+            @endif
+            @if(auth()->user()->isKitchen())
+                <a href="{{ route('kitchen.index') }}" class="block px-4 py-2 hover:bg-orange-100 rounded font-medium text-orange-600">Kuchyňa</a>
+            @endif
+            @if(auth()->user()->isWaiter())
+                <a href="{{ route('waiter.index') }}" class="block px-4 py-2 hover:bg-blue-100 rounded font-medium text-blue-600">Čašník</a>
+            @endif
+            @if(!auth()->user()->isAdmin() && !auth()->user()->isKitchen() && !auth()->user()->isWaiter())
+                <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
+            @endif
             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Profil</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf

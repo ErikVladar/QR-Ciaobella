@@ -8,7 +8,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </a>
-                <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Upraviť doplnky</h1>
+                <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Upraviť prílohy</h1>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-6 mb-6">
                 <label class="block text-lg font-bold text-gray-900 mb-4">
-                    🍕 Vyberte doplnky (maximálne 4)
+                    🍕 Vyberte prílohy (maximálne 4)
                 </label>
                 
                 <div class="space-y-2">
@@ -45,7 +45,7 @@
                 </div>
                 
                 <div id="limit-warning" class="hidden mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
-                    ⚠️ Môžete vybrať maximálne 4 doplnky
+                    ⚠️ Môžete vybrať maximálne 4 prílohy
                 </div>
             </div>
 

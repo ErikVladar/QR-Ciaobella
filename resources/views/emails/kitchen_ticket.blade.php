@@ -56,7 +56,7 @@
 
         <div class="total">Celková suma objednávky: {{ number_format($order->total,2) }}€</div>
 
-        <div class="print-note">Vytlačte tento lístok a umiestnite ho do kuchyne. Dodržujte doplnky na jednotlivé položky vyššie.</div>
+        <div class="print-note">Vytlačte tento lístok a umiestnite ho do kuchyne. Dodržujte prílohy na jednotlivé položky vyššie.</div>
     </div>
 </body>
 </html>

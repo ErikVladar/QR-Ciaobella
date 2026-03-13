@@ -16,7 +16,7 @@
                 <a href="{{ route('categories.products', $category) }}" 
                    class="group block bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
                     <div class="aspect-w-16 aspect-h-10 relative overflow-hidden">
-                        <img src="{{ asset($category->image_path) }}" 
+                        <img src="{{ $category->image_path ? \Illuminate\Support\Facades\Storage::url($category->image_path) : asset('imgs/logo.png') }}" 
                              alt="{{ $category->name }}" 
                              class="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-300">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>

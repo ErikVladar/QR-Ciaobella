@@ -30,6 +30,10 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         if ($user && method_exists($user, 'isKitchen') && $user->isKitchen()) {
             return redirect()->route('kitchen.index');
         }
