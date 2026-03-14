@@ -1,4 +1,10 @@
-<nav class="bg-white p-2 shadow sticky top-0 z-50 h-16 overflow-visible" x-data="{ open: false }">
+<nav class="bg-white p-2 shadow sticky top-0 z-50 h-16 overflow-visible">
+    <style>
+        .nav-summary-marker::marker,
+        .nav-summary-marker::-webkit-details-marker {
+            display: none;
+        }
+    </style>
     <!-- Logo -->
     <div class="absolute left-0 top-0 z-20">
         <a href="{{ route('categories.index') }}" class="block">
@@ -28,40 +34,36 @@
                     @endif
                 </a>
             @else
-                <button @click="open = !open" class="text-gray-700 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <details class="relative">
+                    <summary class="nav-summary-marker list-none cursor-pointer text-gray-700 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </summary>
+
+                    <div class="absolute top-full right-0 mt-3 w-64 bg-white shadow-md z-50 space-y-2 p-4 rounded-lg border border-gray-200">
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-purple-100 rounded font-medium text-purple-600">Administrácia</a>
+                            {{-- <a href="{{ route('admin.additions') }}" class="block px-4 py-2 hover:bg-amber-100 rounded font-medium text-amber-600">Prílohy</a> --}}
+                        @endif
+                        @if(auth()->user()->isKitchen())
+                            <a href="{{ route('kitchen.index') }}" class="block px-4 py-2 hover:bg-orange-100 rounded font-medium text-orange-600">Kuchyňa</a>
+                        @endif
+                        @if(auth()->user()->isWaiter())
+                            <a href="{{ route('waiter.index') }}" class="block px-4 py-2 hover:bg-blue-100 rounded font-medium text-blue-600">Čašník</a>
+                        @endif
+                        @if(!auth()->user()->isAdmin() && !auth()->user()->isKitchen() && !auth()->user()->isWaiter())
+                            <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
+                        @endif
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Profil</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded">Odhlásiť sa</button>
+                        </form>
+                    </div>
+                </details>
             @endguest
         </div>
     </div>
-
-    <!-- Mobile dropdown (absolute overlay) - only for authenticated users -->
-    @auth
-        <div x-show="open" @click.away="open = false" x-transition
-            class="absolute top-full left-0 w-full bg-white shadow-md z-50 space-y-2 mt-1 p-4">
-            @if(auth()->user()->isAdmin())
-                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 hover:bg-purple-100 rounded font-medium text-purple-600">Administrácia</a>
-                <a href="{{ route('admin.additions') }}" class="block px-4 py-2 hover:bg-amber-100 rounded font-medium text-amber-600">Prílohy</a>
-            @endif
-            @if(auth()->user()->isKitchen())
-                <a href="{{ route('kitchen.index') }}" class="block px-4 py-2 hover:bg-orange-100 rounded font-medium text-orange-600">Kuchyňa</a>
-            @endif
-            @if(auth()->user()->isWaiter())
-                <a href="{{ route('waiter.index') }}" class="block px-4 py-2 hover:bg-blue-100 rounded font-medium text-blue-600">Čašník</a>
-            @endif
-            @if(!auth()->user()->isAdmin() && !auth()->user()->isKitchen() && !auth()->user()->isWaiter())
-                <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
-            @endif
-            <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Profil</a>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="w-full text-left px-4 py-2 hover:bg-gray-100 rounded">Odhlásiť sa</button>
-            </form>
-        </div>
-    @endauth
 </nav>
