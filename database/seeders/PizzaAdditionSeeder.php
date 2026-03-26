@@ -13,10 +13,10 @@ class PizzaAdditionSeeder extends Seeder
     public function run(): void
     {
         $additions = [
-            ['name' => 'Extra Cheese', 'price' => 1.50],
+            ['name' => 'Extra Syr', 'price' => 1.50],
             ['name' => 'Pepperoni', 'price' => 2.00],
-            ['name' => 'Mushrooms', 'price' => 1.00],
-            ['name' => 'Olives', 'price' => 1.25],
+            ['name' => 'Huby', 'price' => 1.00],
+            ['name' => 'Olivy', 'price' => 1.25],
         ];
 
         foreach ($additions as $addition) {

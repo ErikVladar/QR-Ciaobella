@@ -28,6 +28,16 @@
                             <!-- Item Info -->
                             <div class="flex-1 min-w-0">
                                 <h3 class="font-bold text-gray-900 text-lg mb-1">{{ $item['name'] ?? 'Product' }}</h3>
+
+                                @if(!empty($item['description']))
+                                    <p class="text-sm text-gray-600 mb-2">{{ $item['description'] }}</p>
+                                @endif
+
+                                @if(!empty($item['alergens']))
+                                    <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-2 inline-block">
+                                        <span class="font-semibold">Alergény:</span> {{ $item['alergens'] }}
+                                    </p>
+                                @endif
                                 
                                 @if(!empty($item['addition_names']))
                                     <div class="flex flex-wrap gap-1 mb-2">
@@ -113,13 +123,13 @@
                                         Spôsob platby <span class="text-red-500">*</span>
                                     </label>
                                     <div class="flex gap-2">
-                                        <label class="flex-1 relative">
+                                        {{-- <label class="flex-1 relative">
                                             <input type="radio" name="payment_method" value="card" required
                                                 class="peer sr-only">
                                             <div class="px-4 py-3 border-2 border-gray-300 rounded-xl cursor-pointer text-center font-semibold transition-all peer-checked:border-green-600 peer-checked:bg-green-50 peer-checked:text-green-700">
                                                 💳 Karta
                                             </div>
-                                        </label>
+                                        </label> --}}
                                         <label class="flex-1 relative">
                                             <input type="radio" name="payment_method" value="counter" required
                                                 class="peer sr-only">

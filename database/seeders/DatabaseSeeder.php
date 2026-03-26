@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             ProductSeeder::class,
             PizzaAdditionSeeder::class,
+            MenuItemSeeder::class,
         ]);
     }
 }

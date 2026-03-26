@@ -38,6 +38,8 @@ class CartController extends Controller
             $cart[$cartKey] = [
                 'product_id' => $product->id,
                 'name' => $product->name,
+                'description' => $product->description,
+                'alergens' => $product->alergens,
                 'price' => $product->price,
                 'quantity' => 1,
                 'addition_ids' => $additionIds,

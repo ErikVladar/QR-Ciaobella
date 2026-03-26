@@ -43,6 +43,12 @@
                 </div>
 
                 <div>
+                    <label class="block text-sm font-medium text-gray-700">Alergény</label>
+                    <input type="text" wire:model="alergens" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500" placeholder="Napr. Glutén, Laktóza">
+                    @error('alergens') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700">Fotografia</label>
                     <input type="file" wire:model="image" accept="image/*" class="mt-1 block w-full">
                     @error('image') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
@@ -67,6 +73,7 @@
                     <th class="px-4 py-2">Fotografia</th>
                     <th class="px-4 py-2">Názov</th>
                     <th class="px-4 py-2">Kategória</th>
+                    <th class="px-4 py-2">Alergény</th>
                     <th class="px-4 py-2">Cena</th>
                     <th class="px-4 py-2">Akcie</th>
                 </tr>
@@ -88,6 +95,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-2 text-sm">{{ $product->category->name }}</td>
+                        <td class="px-4 py-2 text-xs text-gray-600">{{ $product->alergens ?: '-' }}</td>
                         <td class="px-4 py-2 font-medium">{{ number_format($product->price, 2) }} €</td>
                         <td class="px-4 py-2 text-sm">
                             <button wire:click="openEditForm({{ $product->id }})" class="text-yellow-600 hover:text-yellow-800 font-medium">Upraviť</button>
@@ -96,7 +104,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-8 text-center text-gray-500">Žiadne produkty. Vytvorte prvý!</td>
+                        <td colspan="6" class="px-4 py-8 text-center text-gray-500">Žiadne produkty. Vytvorte prvý!</td>
                     </tr>
                 @endforelse
             </tbody>

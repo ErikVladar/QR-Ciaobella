@@ -13,57 +13,161 @@
         </div>
     </div>
 
-    <!-- Products Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-            @foreach($products as $product)
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow">
-                    <div class="relative">
-                        <img src="{{ $product->image_path ? \Illuminate\Support\Facades\Storage::url($product->image_path) : ($category->image_path ? \Illuminate\Support\Facades\Storage::url($category->image_path) : asset('imgs/logo.png')) }}" 
-                             alt="{{ $product->name }}" 
-                             class="w-full h-40 sm:h-48 object-cover">
-                    </div>
-                    
-                    <form action="{{ route('cart.add', $product->id) }}" method="POST" class="p-4">
-                        @csrf
-                        <h2 class="font-bold text-lg text-gray-900 mb-1">{{ $product->name }}</h2>
-                        <p class="text-2xl font-bold text-green-600 mb-3">{{ number_format($product->price, 2) }}€</p>
-                        
-                        @if($category->has_prilohy)
-                            <div class="mb-4 p-3 bg-gray-50 rounded-xl border border-gray-200">
-                                <label class="block text-sm font-bold text-gray-700 mb-2">🍕 Prílohy (max 4)</label>
-                                @php
-                                    $additions = \App\Models\PizzaAddition::all();
-                                @endphp
-                                <details class="group">
-                                    <summary class="list-none cursor-pointer flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition">
-                                        <span>Vybrať prílohy</span>
-                                        <svg class="w-4 h-4 text-gray-500 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </summary>
+    @php
+        $pizzaAdditions = $category->has_prilohy ? \App\Models\PizzaAddition::all() : collect();
+    @endphp
 
-                                    <div class="mt-2 space-y-2">
-                                        @foreach($additions as $addition)
-                                            <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded-lg transition">
-                                                <input type="checkbox" name="additions[]" value="{{ $addition->id }}"
-                                                       class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
-                                                <span class="text-sm text-gray-700 flex-1">{{ $addition->name }}</span>
-                                                <span class="text-sm font-semibold text-green-600">+{{ number_format($addition->price, 2) }}€</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                </details>
+    <!-- Products List -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24">
+        <div class="space-y-4">
+            @foreach($products as $product)
+                <form action="{{ route('cart.add', $product->id) }}" method="POST"
+                      class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5 hover:shadow-md transition-shadow">
+                    @csrf
+
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                <div class="min-w-0">
+                                    <h2 class="font-bold text-lg sm:text-xl text-gray-900">{{ $product->name }}</h2>
+                                    @if($product->description)
+                                        <p class="text-sm text-gray-600 mt-1">{{ $product->description }}</p>
+                                    @endif
+                                </div>
+
+                                <p class="text-xl sm:text-2xl font-bold text-green-600 whitespace-nowrap">
+                                    {{ number_format($product->price, 2) }}€
+                                </p>
                             </div>
-                        @endif
-                        
-                        <button type="submit" 
-                                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm">
-                            Pridať do košíka
-                        </button>
-                    </form>
-                </div>
+
+                            @if($product->alergens)
+                                <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mt-3 inline-block">
+                                    <span class="font-semibold">Alergény:</span> {{ $product->alergens }}
+                                </p>
+                            @endif
+
+                            @if($category->has_prilohy)
+                                <p class="text-xs text-gray-500 mt-3">
+                                    Pri pridaní do košíka sa opýtame, či chcete doplniť prílohy.
+                                </p>
+                            @endif
+                        </div>
+
+                        <div class="lg:w-52 lg:shrink-0">
+                            @if($category->has_prilohy)
+                                <button type="button"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm"
+                                        onclick="window.openAdditionsModal(this.form)">
+                                    Pridať do košíka
+                                </button>
+
+                                <dialog class="additions-modal w-[calc(100%-1.5rem)] sm:w-full max-w-lg rounded-2xl p-0 backdrop:bg-black/50">
+                                    <div class="p-6 sm:p-7">
+                                        <div class="flex items-start justify-between gap-4 mb-4">
+                                            <div>
+                                                <h3 class="text-lg sm:text-xl font-bold text-gray-900">{{ $product->name }}</h3>
+                                                <p class="text-sm text-gray-600 mt-1">Chcete si pridať aj prílohy?</p>
+                                            </div>
+                                            <button type="button" class="text-gray-400 hover:text-gray-600 transition" onclick="window.closeAdditionsModal(this)">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                                            <div class="flex items-center justify-between gap-3 mb-3">
+                                                <label class="text-sm font-bold text-gray-700">🍕 Prílohy (max 4)</label>
+                                                <span class="text-xs text-gray-500">Nepovinné</span>
+                                            </div>
+
+                                            <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                                                @foreach($pizzaAdditions as $addition)
+                                                    <label class="flex items-center gap-2 cursor-pointer bg-white hover:bg-gray-50 p-2 rounded-lg transition border border-gray-100">
+                                                        <input type="checkbox" name="additions[]" value="{{ $addition->id }}"
+                                                               class="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500">
+                                                        <span class="text-sm text-gray-700 flex-1">{{ $addition->name }}</span>
+                                                        <span class="text-sm font-semibold text-green-600">+{{ number_format($addition->price, 2) }}€</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-5 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+                                            <button type="button"
+                                                    class="px-4 py-3 rounded-xl border border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition"
+                                                    onclick="window.submitWithoutAdditions(this)">
+                                                Bez príloh
+                                            </button>
+                                            <button type="submit"
+                                                    class="px-4 py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold transition shadow-sm">
+                                                Pridať s výberom
+                                            </button>
+                                        </div>
+                                    </div>
+                                </dialog>
+                            @else
+                                <button type="submit"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm">
+                                    Pridať do košíka
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </form>
             @endforeach
         </div>
     </div>
+
+    <script>
+        window.openAdditionsModal = function (form) {
+            const modal = form.querySelector('.additions-modal');
+
+            if (modal) {
+                modal.showModal();
+            }
+        };
+
+        window.closeAdditionsModal = function (button) {
+            const modal = button.closest('.additions-modal');
+
+            if (modal) {
+                modal.close();
+            }
+        };
+
+        window.submitWithoutAdditions = function (button) {
+            const modal = button.closest('.additions-modal');
+            const form = button.closest('form');
+
+            if (!form) {
+                return;
+            }
+
+            form.querySelectorAll('input[name="additions[]"]:checked').forEach((input) => {
+                input.checked = false;
+            });
+
+            if (modal) {
+                modal.close();
+            }
+
+            form.requestSubmit();
+        };
+
+        document.querySelectorAll('.additions-modal').forEach((modal) => {
+            modal.addEventListener('click', (event) => {
+                const dialogDimensions = modal.getBoundingClientRect();
+                const clickedOutside =
+                    event.clientX < dialogDimensions.left ||
+                    event.clientX > dialogDimensions.right ||
+                    event.clientY < dialogDimensions.top ||
+                    event.clientY > dialogDimensions.bottom;
+
+                if (clickedOutside) {
+                    modal.close();
+                }
+            });
+        });
+    </script>
 </x-app-layout>

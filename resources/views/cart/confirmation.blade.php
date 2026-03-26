@@ -52,7 +52,15 @@
                                         <p class="font-bold text-gray-900">
                                             {{ $item->product->name ?? $item->product_name ?? ('Produkt #' . $item->product_id) }}
                                         </p>
-                                        <p class="text-sm text-gray-600">{{ number_format($item->price, 2) }}€ × {{ $item->quantity }}</p>
+                                        @if(!empty($item->product?->description))
+                                            <p class="text-sm text-gray-600">{{ $item->product->description }}</p>
+                                        @endif
+                                        @if(!empty($item->product?->alergens))
+                                            <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mt-1 inline-block">
+                                                <span class="font-semibold">Alergény:</span> {{ $item->product->alergens }}
+                                            </p>
+                                        @endif
+                                        <p class="text-sm text-gray-600 mt-1">{{ number_format($item->price, 2) }}€ × {{ $item->quantity }}</p>
                                     </div>
                                     <p class="font-bold text-gray-900">{{ number_format($item->price * $item->quantity, 2) }}€</p>
                                 </div>

@@ -19,6 +19,7 @@ class AdminProducts extends Component
     public $category_id = '';
     public $image = null;
     public $description = '';
+    public $alergens = '';
     public $showForm = false;
 
     public function mount()
@@ -47,6 +48,7 @@ class AdminProducts extends Component
         $this->price = $product->price;
         $this->category_id = $product->category_id;
         $this->description = $product->description ?? '';
+        $this->alergens = $product->alergens ?? '';
         $this->image = null;
         $this->showForm = true;
     }
@@ -59,6 +61,7 @@ class AdminProducts extends Component
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|max:5120',
             'description' => 'nullable|string',
+            'alergens' => 'nullable|string|max:1000',
         ]);
 
         if ($this->editingId) {
@@ -67,6 +70,7 @@ class AdminProducts extends Component
             $product->price = $this->price;
             $product->category_id = $this->category_id;
             $product->description = $this->description;
+            $product->alergens = $this->alergens;
 
             if ($this->image) {
                 $path = $this->image->store('products', 'public');
@@ -87,6 +91,7 @@ class AdminProducts extends Component
                 'category_id' => $this->category_id,
                 'image_path' => $imagePath,
                 'description' => $this->description,
+                'alergens' => $this->alergens,
             ]);
             session()->flash('notify', 'Produkt vytvorený!');
         }
@@ -109,6 +114,7 @@ class AdminProducts extends Component
         $this->category_id = '';
         $this->image = null;
         $this->description = '';
+        $this->alergens = '';
         $this->showForm = false;
         $this->editingId = null;
     }
