@@ -10,7 +10,7 @@
     </button>
 
     @if($showForm)
-        <div class="mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="mb-6 p-6 bg-white rounded-lg border border-gray-200">
             <h3 class="text-lg font-bold mb-4">{{ $editingId ? 'Upraviť kategóriu' : 'Nová kategória' }}</h3>
 
             <form wire:submit="saveCategory" class="space-y-4">
@@ -26,9 +26,15 @@
                     @error('image') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="flex items-center">
-                    <input type="checkbox" wire:model="hasPrilohy" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                    <label class="ml-2 block text-sm text-gray-700">Táto kategória má prílohy (prílohy/doplnky)</label>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Prílohy pre kategóriu</label>
+                    <button type="button"
+                            wire:click="$toggle('hasPrilohy')"
+                            aria-label="Prepnúť prílohy"
+                            aria-pressed="{{ $hasPrilohy ? 'true' : 'false' }}"
+                            class="inline-flex h-8 w-12 items-center rounded-full p-1 transition-colors duration-200 {{ $hasPrilohy ? 'bg-green-600 justify-end' : 'bg-red-600 justify-start' }}">
+                        <span class="block h-6 w-6 rounded-full bg-white shadow-sm transition-all duration-200"></span>
+                    </button>
                 </div>
 
                 <div class="flex gap-2">

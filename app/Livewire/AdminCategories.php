@@ -40,9 +40,10 @@ class AdminCategories extends Component
         $category = Category::findOrFail($id);
         $this->editingId = $id;
         $this->name = $category->name;
-        $this->hasPrilohy = $category->has_prilohy;
+        $this->hasPrilohy = (bool) $category->has_prilohy;
         $this->image = null;
         $this->showForm = true;
+        $this->dispatch('scroll-to-top');
     }
 
     public function saveCategory()
@@ -56,7 +57,7 @@ class AdminCategories extends Component
         if ($this->editingId) {
             $category = Category::findOrFail($this->editingId);
             $category->name = $this->name;
-            $category->has_prilohy = $this->hasPrilohy;
+            $category->has_prilohy = (bool) $this->hasPrilohy;
 
             if ($this->image) {
                 // Delete old image if it exists
@@ -78,7 +79,7 @@ class AdminCategories extends Component
             Category::create([
                 'name' => $this->name,
                 'image_path' => $imagePath,
-                'has_prilohy' => $this->hasPrilohy,
+                'has_prilohy' => (bool) $this->hasPrilohy,
             ]);
             session()->flash('notify', 'Kategória vytvorená!');
         }

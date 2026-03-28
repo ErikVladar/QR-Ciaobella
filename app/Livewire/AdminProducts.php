@@ -52,6 +52,7 @@ class AdminProducts extends Component
         $this->alergens = $product->alergens ?? '';
         $this->image = null;
         $this->showForm = true;
+        $this->dispatch('scroll-to-top');
     }
 
     public function saveProduct()

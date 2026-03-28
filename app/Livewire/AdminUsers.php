@@ -51,6 +51,7 @@ class AdminUsers extends Component
         $this->role = $user->role;
         $this->password = '';
         $this->showForm = true;
+        $this->dispatch('scroll-to-top');
     }
 
     public function saveUser()

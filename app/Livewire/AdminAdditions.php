@@ -39,6 +39,7 @@ class AdminAdditions extends Component
         $this->name = $addition->name;
         $this->price = (string) $addition->price;
         $this->showForm = true;
+        $this->dispatch('scroll-to-top');
     }
 
     public function saveAddition(): void
