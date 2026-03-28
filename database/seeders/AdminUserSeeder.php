@@ -13,7 +13,7 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         User::query()->updateOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@ciaobella.com'],
             [
                 'name' => 'Admin',
                 'password' => 'Admin12345',
@@ -21,6 +21,6 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $this->command?->info('Admin user seeded: admin@example.com (password: Admin12345)');
+        $this->command?->info('Admin user seeded: admin@ciaobella.com (password: Admin12345)');
     }
 }

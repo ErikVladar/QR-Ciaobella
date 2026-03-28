@@ -13,7 +13,7 @@ class KitchenUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $email = 'kitchen@example.com';
+        $email = 'kitchen@ciaobella.com';
 
         $user = User::where('email', $email)->first();
 

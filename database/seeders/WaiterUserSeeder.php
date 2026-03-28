@@ -13,7 +13,7 @@ class WaiterUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $email = 'waiter@example.com';
+        $email = 'waiter@ciaobella.com';
 
         $user = User::where('email', $email)->first();
 
