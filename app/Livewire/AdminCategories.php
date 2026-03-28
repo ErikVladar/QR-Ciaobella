@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class AdminCategories extends Component
 {
@@ -48,7 +49,7 @@ class AdminCategories extends Component
     {
         $this->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
             'hasPrilohy' => 'boolean',
         ]);
 
@@ -58,6 +59,10 @@ class AdminCategories extends Component
             $category->has_prilohy = $this->hasPrilohy;
 
             if ($this->image) {
+                // Delete old image if it exists
+                if ($category->image_path) {
+                    Storage::disk('public')->delete($category->image_path);
+                }
                 $path = $this->image->store('categories', 'public');
                 $category->image_path = $path;
             }
@@ -84,7 +89,11 @@ class AdminCategories extends Component
 
     public function deleteCategory($id)
     {
-        Category::findOrFail($id)->delete();
+        $category = Category::findOrFail($id);
+        if ($category->image_path) {
+            Storage::disk('public')->delete($category->image_path);
+        }
+        $category->delete();
         session()->flash('notify', 'Kategória vymazaná!');
         $this->loadCategories();
     }

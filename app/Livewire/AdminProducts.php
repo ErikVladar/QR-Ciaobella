@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class AdminProducts extends Component
 {
@@ -59,7 +60,7 @@ class AdminProducts extends Component
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|max:5120',
+            'image' => 'nullable|image|max:10240',
             'description' => 'nullable|string',
             'alergens' => 'nullable|string|max:1000',
         ]);
@@ -73,6 +74,10 @@ class AdminProducts extends Component
             $product->alergens = $this->alergens;
 
             if ($this->image) {
+                // Delete old image if it exists
+                if ($product->image_path) {
+                    Storage::disk('public')->delete($product->image_path);
+                }
                 $path = $this->image->store('products', 'public');
                 $product->image_path = $path;
             }
@@ -102,7 +107,11 @@ class AdminProducts extends Component
 
     public function deleteProduct($id)
     {
-        Product::findOrFail($id)->delete();
+        $product = Product::findOrFail($id);
+        if ($product->image_path) {
+            Storage::disk('public')->delete($product->image_path);
+        }
+        $product->delete();
         session()->flash('notify', 'Produkt vymazaný!');
         $this->loadData();
     }
