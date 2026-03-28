@@ -5,7 +5,7 @@
             <div>
                 <h3 class="text-lg font-bold mb-4">O nás</h3>
                 <p class="text-gray-400 text-sm">
-                    Vitajte v našej reštaurácii. Objednajte si jedlo rýchlo a pohodlne cez náš online systém.
+                    Vitajte v Ciao 🍕 Bella. Objednajte si jedlo rýchlo a pohodlne cez náš online systém.
                 </p>
             </div>
 
@@ -13,9 +13,18 @@
             <div>
                 <h3 class="text-lg font-bold mb-4">Kontakt</h3>
                 <ul class="space-y-2 text-sm text-gray-400">
-                    <li>📍 Adresa reštaurácie</li>
-                    <li>📞 +421 XXX XXX XXX</li>
-                    <li>✉️ info@restaurant.sk</li>
+                    <li class="flex items-start gap-2">
+                        <span class="leading-5">📍</span>
+                        <span>Ul. 1. mája 899/23<br>02001 Púchov<br>Slovensko</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="leading-5">📞</span>
+                        <a href="tel:0949464033" class="hover:text-white">+421 949 464 033</a>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="leading-5">✉️</span>
+                        <a href="mailto:veron.micietova@gmail.com" class="hover:text-white">veron.micietova@gmail.com</a>
+                    </li>
                 </ul>
             </div>
         </div>
