@@ -14,6 +14,8 @@ class AdminProducts extends Component
 
     public $products;
     public $categories;
+    public $search = '';
+    public $categoryFilter = '';
     public $editingId = null;
     public $name = '';
     public $price = '';
@@ -30,8 +32,45 @@ class AdminProducts extends Component
 
     public function loadData()
     {
-        $this->products = Product::with('category')->latest()->get();
-        $this->categories = Category::all();
+        $query = Product::with('category')
+            ->when($this->categoryFilter, function ($query) {
+                $query->where('category_id', $this->categoryFilter);
+            })
+            ->when($this->search, function ($query) {
+                $search = trim($this->search);
+
+                $query->where(function ($innerQuery) use ($search) {
+                    $innerQuery->where('name', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%")
+                        ->orWhere('alergens', 'like', "%{$search}%")
+                        ->orWhereHas('category', function ($categoryQuery) use ($search) {
+                            $categoryQuery->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->orderBy('category_id')
+            ->orderBy('name');
+
+        $this->products = $query->get();
+
+        $this->categories = Category::query()->orderBy('name')->get();
+    }
+
+    public function updatedSearch()
+    {
+        $this->loadData();
+    }
+
+    public function updatedCategoryFilter()
+    {
+        $this->loadData();
+    }
+
+    public function clearFilters()
+    {
+        $this->search = '';
+        $this->categoryFilter = '';
+        $this->loadData();
     }
 
     public function openCreateForm()

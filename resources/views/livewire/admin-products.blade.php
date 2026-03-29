@@ -66,7 +66,44 @@
         </div>
     @endif
 
+    <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Hľadať produkt</label>
+            <input
+                type="text"
+                wire:model.live.debounce.300ms="search"
+                placeholder="Názov, popis, alergény alebo kategória..."
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            >
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Filter kategórie</label>
+            <select
+                wire:model.live="categoryFilter"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+            >
+                <option value="">Všetky kategórie</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+
+    @if($search || $categoryFilter)
+        <div class="mb-4">
+            <button wire:click="clearFilters" class="px-3 py-2 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">
+                Vymazať filtre
+            </button>
+        </div>
+    @endif
+
     <div class="overflow-x-auto">
+        @php
+            $groupedProducts = $products->groupBy(fn($product) => $product->category?->name ?? 'Bez kategórie');
+        @endphp
+
         <table class="w-full text-left">
             <thead class="bg-gray-100 border-b-2 border-gray-200">
                 <tr>
@@ -79,34 +116,45 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse($products as $product)
-                    <tr class="border-b border-gray-200 hover:bg-gray-50">
-                        <td class="px-4 py-2">
-                            @if($product->image_path)
-                                <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="h-10 w-10 object-cover rounded">
-                            @else
-                                <div class="h-10 w-10 bg-gray-200 rounded"></div>
-                            @endif
-                        </td>
-                        <td class="px-4 py-2">
-                            <strong>{{ $product->name }}</strong>
-                            @if($product->description)
-                                <div class="text-xs text-gray-500">{{ Str::limit($product->description, 50) }}</div>
-                            @endif
-                        </td>
-                        <td class="px-4 py-2 text-sm">{{ $product->category->name }}</td>
-                        <td class="px-4 py-2 text-xs text-gray-600">{{ $product->alergens ?: '-' }}</td>
-                        <td class="px-4 py-2 font-medium">{{ number_format($product->price, 2) }} €</td>
-                        <td class="px-4 py-2 text-sm">
-                            <button wire:click="openEditForm({{ $product->id }})" class="text-yellow-600 hover:text-yellow-800 font-medium">Upraviť</button>
-                            <button wire:click="deleteProduct({{ $product->id }})" onclick="return confirm('Naozaj?')" class="text-red-600 hover:text-red-800 font-medium ml-2">Vymazať</button>
-                        </td>
-                    </tr>
-                @empty
+                @if($products->isEmpty())
                     <tr>
                         <td colspan="6" class="px-4 py-8 text-center text-gray-500">Žiadne produkty. Vytvorte prvý!</td>
                     </tr>
-                @endforelse
+                @else
+                    @foreach($groupedProducts as $categoryName => $categoryProducts)
+                        <tr class="bg-green-50 border-y border-green-200">
+                            <td colspan="6" class="px-4 py-2 font-semibold text-green-800">
+                                {{ $categoryName }}
+                                <span class="text-xs font-normal text-green-700">({{ $categoryProducts->count() }})</span>
+                            </td>
+                        </tr>
+
+                        @foreach($categoryProducts as $product)
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="px-4 py-2">
+                                    @if($product->image_path)
+                                        <img src="{{ Storage::url($product->image_path) }}" alt="{{ $product->name }}" class="h-10 w-10 object-cover rounded">
+                                    @else
+                                        <div class="h-10 w-10 bg-gray-200 rounded"></div>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2">
+                                    <strong>{{ $product->name }}</strong>
+                                    @if($product->description)
+                                        <div class="text-xs text-gray-500">{{ Str::limit($product->description, 50) }}</div>
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2 text-sm">{{ $product->category->name }}</td>
+                                <td class="px-4 py-2 text-xs text-gray-600">{{ $product->alergens ?: '-' }}</td>
+                                <td class="px-4 py-2 font-medium">{{ number_format($product->price, 2) }} €</td>
+                                <td class="px-4 py-2 text-sm">
+                                    <button wire:click="openEditForm({{ $product->id }})" class="text-yellow-600 hover:text-yellow-800 font-medium">Upraviť</button>
+                                    <button wire:click="deleteProduct({{ $product->id }})" onclick="return confirm('Naozaj?')" class="text-red-600 hover:text-red-800 font-medium ml-2">Vymazať</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
