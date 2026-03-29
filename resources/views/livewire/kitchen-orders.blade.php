@@ -39,14 +39,65 @@
 
                     <!-- Table Number -->
                     <div class="px-4 py-3 bg-gray-100 border-b">
-                        <div class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
-                            </svg>
-                            <span class="text-sm font-semibold text-gray-700">Stôl:</span>
-                            <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
+                                </svg>
+                                <span class="text-sm font-semibold text-gray-700">Stôl:</span>
+                                <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
+                            </div>
+
+                            <button type="button"
+                                    onclick="window.openOrderDetails('kitchen-details-{{ $order->id }}')"
+                                    class="text-sm font-semibold text-blue-700 hover:text-blue-900 underline underline-offset-2">
+                                Detaily:
+                            </button>
                         </div>
                     </div>
+
+                    <dialog id="kitchen-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                        <div class="p-5 sm:p-6">
+                            <div class="flex items-start justify-between gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">Detaily objednávky #{{ $order->id }}</h3>
+                                    <p class="text-sm text-gray-600">Stôl: {{ $order->table_number ?? '-' }} • {{ $order->created_at->format('H:i') }}</p>
+                                </div>
+                                <button type="button"
+                                        onclick="window.closeOrderDetails(this)"
+                                        class="text-gray-400 hover:text-gray-700 transition">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="max-h-[65vh] overflow-y-auto pr-1 space-y-3">
+                                @foreach ($order->items as $item)
+                                    <div class="border border-gray-200 rounded-xl p-3 bg-white">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <div class="font-bold text-gray-900">
+                                                {{ $item->product->name ?? $item->product_name ?? ('Product #' . $item->product_id) }}
+                                            </div>
+                                            <div class="font-bold text-gray-700">×{{ $item->quantity }}</div>
+                                        </div>
+                                        <div class="text-sm text-gray-600">{{ number_format($item->price, 2) }}€ za kus</div>
+
+                                        @if($item->additions && $item->additions->count())
+                                            <div class="mt-2 pl-3 border-l-2 border-green-400 bg-green-50 py-2 pr-2 rounded">
+                                                <div class="text-xs font-bold text-green-800 mb-1">✓ PRÍLOHY:</div>
+                                                <ul class="space-y-1">
+                                                    @foreach($item->additions as $add)
+                                                        <li class="text-sm text-green-900 font-medium">• {{ $add->addition_name }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </dialog>
 
                     <!-- Order Items -->
                     <div class="p-4">
@@ -97,4 +148,20 @@
             @endforeach
         </div>
     @endif
+
+    <script>
+        window.openOrderDetails = function (dialogId) {
+            const modal = document.getElementById(dialogId);
+            if (modal) {
+                modal.showModal();
+            }
+        };
+
+        window.closeOrderDetails = function (button) {
+            const modal = button.closest('dialog');
+            if (modal) {
+                modal.close();
+            }
+        };
+    </script>
 </div>
