@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class KitchenFinished extends Component
@@ -11,8 +12,12 @@ class KitchenFinished extends Component
 
     public function render()
     {
+        $timezone = config('app.timezone', 'Europe/Bratislava');
+        $today = Carbon::now($timezone)->toDateString();
+
         // Show all finished orders regardless of payment status
-        $query = Order::whereIn('status', ['completed', 'cancelled']);
+        $query = Order::whereIn('status', ['completed', 'cancelled'])
+            ->whereDate('created_at', $today);
 
         if ($this->tableFilter !== '') {
             $query->where('table_number', $this->tableFilter);

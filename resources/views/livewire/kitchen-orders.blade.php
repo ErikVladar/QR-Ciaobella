@@ -15,9 +15,9 @@
             <p class="text-gray-600">Žiadne aktívne objednávky na prípravu</p>
         </div>
     @else
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6 px-1 sm:px-0">
             @foreach ($processingOrders as $order)
-                <div wire:key="processing-{{ $order->id }}" class="rounded-2xl shadow-md overflow-hidden border-4 border-yellow-400 bg-yellow-50">
+            <div wire:key="processing-{{ $order->id }}" class="rounded-2xl shadow-md overflow-hidden border-4 border-yellow-400 bg-yellow-50">
                     
                     <!-- Order Header -->
                     <div class="p-4 border-b bg-yellow-100/50">
@@ -39,7 +39,7 @@
 
                     <!-- Table Number -->
                     <div class="px-4 py-3 bg-gray-100 border-b">
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
                             <div class="flex items-center gap-2">
                                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
@@ -47,16 +47,19 @@
                                 <span class="text-sm font-semibold text-gray-700">Stôl:</span>
                                 <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
                             </div>
+                        </div>
 
+                        <div class="mt-2">
                             <button type="button"
                                     onclick="window.openOrderDetails('kitchen-details-{{ $order->id }}')"
-                                    class="text-sm font-semibold text-blue-700 hover:text-blue-900 underline underline-offset-2">
-                                Detaily:
+                                    class="w-full inline-flex justify-center items-center gap-1 px-3 py-2 text-sm font-semibold text-blue-800 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 min-h-[42px]">
+                                <span>📋</span>
+                                <span>Detaily objednávky</span>
                             </button>
                         </div>
                     </div>
 
-                    <dialog id="kitchen-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                    <dialog wire:ignore.self id="kitchen-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
                         <div class="p-5 sm:p-6">
                             <div class="flex items-start justify-between gap-4 mb-4">
                                 <div>
@@ -130,16 +133,16 @@
                     <!-- Status Update Buttons -->
                     <div class="p-4 border-t">
                         <div class="flex flex-col sm:flex-row gap-2">
-                            <button wire:click="updateStatus({{ $order->id }}, 'processing')" 
-                                class="flex-1 px-4 py-2 bg-yellow-600 text-white font-semibold rounded-lg transition-colors hover:bg-yellow-700">
+                            <button type="button" wire:click.prevent="updateStatus({{ $order->id }}, 'processing')"
+                                class="flex-1 min-h-[48px] px-4 py-2 bg-yellow-600 text-white font-semibold rounded-lg transition-colors hover:bg-yellow-700 touch-manipulation active:scale-[0.99]">
                                 ⏳ Pripravuje sa
                             </button>
-                            <button wire:click="updateStatus({{ $order->id }}, 'completed')" 
-                                class="flex-1 px-4 py-2 bg-green-100 text-green-700 font-semibold rounded-lg transition-colors hover:bg-green-600 hover:text-white">
+                            <button type="button" wire:click.prevent="updateStatus({{ $order->id }}, 'completed')"
+                                class="flex-1 min-h-[48px] px-4 py-2 bg-green-100 text-green-700 font-semibold rounded-lg transition-colors hover:bg-green-600 hover:text-white touch-manipulation active:scale-[0.99]">
                                 ✅ Pripravené
                             </button>
-                            <button wire:click="updateStatus({{ $order->id }}, 'cancelled')" 
-                                class="flex-1 px-4 py-2 bg-red-100 text-red-700 font-semibold rounded-lg transition-colors hover:bg-red-600 hover:text-white">
+                            <button type="button" wire:click.prevent="updateStatus({{ $order->id }}, 'cancelled')"
+                                class="flex-1 min-h-[48px] px-4 py-2 bg-red-100 text-red-700 font-semibold rounded-lg transition-colors hover:bg-red-600 hover:text-white touch-manipulation active:scale-[0.99]">
                                 ❌ Zrušené
                             </button>
                         </div>

@@ -3,15 +3,20 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class WaiterActive extends Component
 {
     public function render()
     {
+        $timezone = config('app.timezone', 'Europe/Bratislava');
+        $today = Carbon::now($timezone)->toDateString();
+
         // Orders waiting for payment (counter payment, not yet paid)
         $toPay = Order::where('payment_status', 'unpaid')
             ->where('payment_method', 'counter')
+            ->whereDate('created_at', $today)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -19,6 +24,7 @@ class WaiterActive extends Component
         // OR already paid and ready
         $ready = Order::where('waiter_status', 'ready')
             ->where('status', 'completed')
+            ->whereDate('created_at', $today)
             ->orderBy('created_at', 'desc')
             ->get();
 

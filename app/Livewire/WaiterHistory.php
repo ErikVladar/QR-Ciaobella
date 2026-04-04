@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class WaiterHistory extends Component
@@ -11,7 +12,11 @@ class WaiterHistory extends Component
 
     public function render()
     {
-        $query = Order::where('waiter_status', 'served');
+        $timezone = config('app.timezone', 'Europe/Bratislava');
+        $today = Carbon::now($timezone)->toDateString();
+
+        $query = Order::where('waiter_status', 'served')
+            ->whereDate('created_at', $today);
 
         if ($this->tableFilter !== '') {
             $query->where('table_number', $this->tableFilter);

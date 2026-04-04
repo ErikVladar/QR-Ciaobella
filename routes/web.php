@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 // Admin dashboard (restricted to admin role)
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin', fn() => view('admin.dashboard'))->name('admin.dashboard');
+    Route::get('/admin/orders', fn() => view('admin.orders'))->name('admin.orders');
     Route::get('/admin/categories', fn() => view('admin.categories'))->name('admin.categories');
     Route::get('/admin/products', fn() => view('admin.products'))->name('admin.products');
     Route::get('/admin/prilohy', fn() => view('admin.additions'))->name('admin.additions');

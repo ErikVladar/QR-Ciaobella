@@ -73,11 +73,61 @@
                             <span class="text-sm font-semibold text-gray-700">Stôl:</span>
                             <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
                         </div>
+
+                        <div class="mt-2">
+                            <button type="button"
+                                    onclick="window.openOrderDetails('kitchen-finished-details-{{ $order->id }}')"
+                                    class="w-full inline-flex justify-center items-center gap-1 px-3 py-2 text-sm font-semibold text-blue-800 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 min-h-[42px]">
+                                <span>📋</span>
+                                <span>Detaily objednávky</span>
+                            </button>
+                        </div>
                     </div>
+
+                    <dialog wire:ignore.self id="kitchen-finished-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                        <div class="p-5 sm:p-6">
+                            <div class="flex items-start justify-between gap-4 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold text-gray-900">Detaily objednávky #{{ $order->id }}</h3>
+                                    <p class="text-sm text-gray-600">Stôl: {{ $order->table_number ?? '-' }} • {{ $order->created_at->format('H:i') }}</p>
+                                </div>
+                                <button type="button" onclick="window.closeOrderDetails(this)" class="text-gray-400 hover:text-gray-700 transition">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="max-h-[65vh] overflow-y-auto pr-1 space-y-3">
+                                @foreach ($order->items as $item)
+                                    <div class="border border-gray-200 rounded-xl p-3 bg-white">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <div class="font-bold text-gray-900">
+                                                {{ $item->product->name ?? $item->product_name ?? ('Product #' . $item->product_id) }}
+                                            </div>
+                                            <div class="font-bold text-gray-700">×{{ $item->quantity }}</div>
+                                        </div>
+                                        <div class="text-sm text-gray-600">{{ number_format($item->price, 2) }}€ za kus</div>
+
+                                        @if($item->additions && $item->additions->count())
+                                            <div class="mt-2 pl-3 border-l-2 border-green-400 bg-green-50 py-2 pr-2 rounded">
+                                                <div class="text-xs font-bold text-green-800 mb-1">✓ PRÍLOHY:</div>
+                                                <ul class="space-y-1">
+                                                    @foreach($item->additions as $add)
+                                                        <li class="text-sm text-green-900 font-medium">• {{ $add->addition_name }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </dialog>
 
                     <!-- Order Items -->
                     <div class="p-4">
-                        <div class="space-y-3">
+                        <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
                             @foreach ($order->items as $item)
                                 <div class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                                     <div class="flex justify-between items-start mb-1">
@@ -124,4 +174,20 @@
             @endforeach
         </div>
     @endif
+
+    <script>
+        window.openOrderDetails = function (dialogId) {
+            const modal = document.getElementById(dialogId);
+            if (modal) {
+                modal.showModal();
+            }
+        };
+
+        window.closeOrderDetails = function (button) {
+            const modal = button.closest('dialog');
+            if (modal) {
+                modal.close();
+            }
+        };
+    </script>
 </div>

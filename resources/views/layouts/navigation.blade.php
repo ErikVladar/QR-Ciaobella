@@ -1,8 +1,16 @@
 <nav class="bg-white p-2 shadow sticky top-0 z-50 h-16 overflow-visible">
     <style>
         .nav-summary-marker::marker,
-        .nav-summary-marker::-webkit-details-marker {
+        details > summary::marker,
+        .nav-summary-marker::-webkit-details-marker,
+        details > summary::-webkit-details-marker {
             display: none;
+        }
+
+        .nav-summary-marker {
+            list-style: none;
+            -webkit-appearance: none;
+            appearance: none;
         }
     </style>
     <!-- Logo -->
@@ -53,9 +61,7 @@
                         @if(auth()->user()->isWaiter())
                             <a href="{{ route('waiter.index') }}" class="block px-4 py-2 hover:bg-blue-100 rounded font-medium text-blue-600">Čašník</a>
                         @endif
-                        @if(!auth()->user()->isAdmin() && !auth()->user()->isKitchen() && !auth()->user()->isWaiter())
-                            <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
-                        @endif
+                        <a href="{{ route('cart.view') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Košík</a>
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-100 rounded">Profil</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

@@ -17,9 +17,9 @@
                 <p class="text-gray-600">Žiadne objednávky na zaplatenie</p>
             </div>
         @else
-            <div class="flex gap-4 overflow-x-auto pb-4">
+            <div class="flex gap-5 overflow-x-auto pb-4 px-1 sm:px-0 snap-x snap-mandatory">
                 @foreach ($toPay as $order)
-                    <div wire:key="topay-{{ $order->id }}" class="flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-red-400 bg-red-50">
+                    <div wire:key="topay-{{ $order->id }}" class="snap-start flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-red-400 bg-red-50">
                         
                         <!-- Order Header -->
                         <div class="p-4 border-b bg-red-100/50">
@@ -41,7 +41,7 @@
 
                         <!-- Payment Method & Table -->
                         <div class="px-4 py-3 bg-gray-100 border-b">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
@@ -50,19 +50,23 @@
                                     <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <button type="button"
-                                            onclick="window.openOrderDetails('waiter-topay-details-{{ $order->id }}')"
-                                            class="text-sm font-semibold text-blue-700 hover:text-blue-900 underline underline-offset-2">
-                                        Detaily:
-                                    </button>
                                     <div class="text-sm font-semibold text-gray-700 bg-white px-3 py-1 rounded-full border">
                                         🧾 Pri pulte
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="mt-2">
+                                <button type="button"
+                                        onclick="window.openOrderDetails('waiter-topay-details-{{ $order->id }}')"
+                                        class="w-full inline-flex justify-center items-center gap-1 px-3 py-2 text-sm font-semibold text-blue-800 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 min-h-[42px]">
+                                    <span>📋</span>
+                                    <span>Detaily objednávky</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <dialog id="waiter-topay-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                        <dialog wire:ignore.self id="waiter-topay-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
                             <div class="p-5 sm:p-6">
                                 <div class="flex items-start justify-between gap-4 mb-4">
                                     <div>
@@ -105,7 +109,7 @@
 
                         <!-- Order Items -->
                         <div class="p-4">
-                            <div class="space-y-3">
+                            <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
                                 @foreach ($order->items as $item)
                                     <div class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                                         <div class="flex justify-between items-start mb-1">
@@ -133,8 +137,8 @@
 
                         <!-- Action Button -->
                         <div class="p-4 border-t">
-                            <button wire:click="markAsPaid({{ $order->id }})" 
-                                class="w-full px-4 py-3 bg-green-500 text-white font-bold rounded-lg transition-colors hover:bg-green-600 text-lg">
+                            <button type="button" wire:click.prevent="markAsPaid({{ $order->id }})"
+                                class="w-full min-h-[50px] px-4 py-3 bg-green-500 text-white font-bold rounded-lg transition-colors hover:bg-green-600 text-lg touch-manipulation active:scale-[0.99]">
                                 💰 Označiť ako zaplatené
                             </button>
                         </div>
@@ -156,9 +160,9 @@
                 <p class="text-gray-600">Žiadne objednávky pripravené na podanie</p>
             </div>
         @else
-            <div class="flex gap-4 overflow-x-auto pb-4">
+            <div class="flex gap-5 overflow-x-auto pb-4 px-1 sm:px-0 snap-x snap-mandatory">
                 @foreach ($ready as $order)
-                    <div wire:key="ready-{{ $order->id }}" class="flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-blue-400 bg-blue-50">
+                    <div wire:key="ready-{{ $order->id }}" class="snap-start flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-blue-400 bg-blue-50">
                         
                         <!-- Order Header -->
                         <div class="p-4 border-b bg-blue-100/50">
@@ -180,7 +184,7 @@
 
                         <!-- Payment Method & Table -->
                         <div class="px-4 py-3 bg-gray-100 border-b">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
@@ -189,20 +193,24 @@
                                     <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <button type="button"
-                                            onclick="window.openOrderDetails('waiter-ready-details-{{ $order->id }}')"
-                                            class="text-sm font-semibold text-blue-700 hover:text-blue-900 underline underline-offset-2">
-                                        Detaily:
-                                    </button>
                                     <div class="text-sm font-semibold text-gray-700 bg-white px-3 py-1 rounded-full border">
                                         {{ $order->payment_method === 'card' ? '💳 Karta' : '🧾 Pri pulte' }}
                                         <span class="ml-1 text-green-600">✓</span>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="mt-2">
+                                <button type="button"
+                                        onclick="window.openOrderDetails('waiter-ready-details-{{ $order->id }}')"
+                                        class="w-full inline-flex justify-center items-center gap-1 px-3 py-2 text-sm font-semibold text-blue-800 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 min-h-[42px]">
+                                    <span>📋</span>
+                                    <span>Detaily objednávky</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <dialog id="waiter-ready-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                        <dialog wire:ignore.self id="waiter-ready-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
                             <div class="p-5 sm:p-6">
                                 <div class="flex items-start justify-between gap-4 mb-4">
                                     <div>
@@ -245,7 +253,7 @@
 
                         <!-- Order Items -->
                         <div class="p-4">
-                            <div class="space-y-3">
+                            <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
                                 @foreach ($order->items as $item)
                                     <div class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                                         <div class="flex justify-between items-start mb-1">
@@ -273,8 +281,8 @@
 
                         <!-- Action Button -->
                         <div class="p-4 border-t">
-                            <button wire:click="markAsServed({{ $order->id }})" 
-                                class="w-full px-4 py-3 bg-green-500 text-white font-bold rounded-lg transition-colors hover:bg-green-600 text-lg">
+                            <button type="button" wire:click.prevent="markAsServed({{ $order->id }})"
+                                class="w-full min-h-[50px] px-4 py-3 bg-green-500 text-white font-bold rounded-lg transition-colors hover:bg-green-600 text-lg touch-manipulation active:scale-[0.99]">
                                 ✅ Označiť ako podané
                             </button>
                         </div>
@@ -296,9 +304,9 @@
                 <p class="text-gray-600">Žiadne podané objednávky</p>
             </div>
         @else
-            <div class="flex gap-4 overflow-x-auto pb-4">
+            <div class="flex gap-5 overflow-x-auto pb-4 px-1 sm:px-0 snap-x snap-mandatory">
                 @foreach ($served as $order)
-                    <div wire:key="served-{{ $order->id }}" class="flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-green-400 bg-green-50">
+                    <div wire:key="served-{{ $order->id }}" class="snap-start flex-shrink-0 w-[500px] rounded-2xl shadow-md overflow-hidden border-4 border-green-400 bg-green-50">
                         
                         <!-- Order Header -->
                         <div class="p-4 border-b bg-green-100/50">
@@ -320,7 +328,7 @@
 
                         <!-- Payment Method & Table -->
                         <div class="px-4 py-3 bg-gray-100 border-b">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/>
@@ -329,20 +337,24 @@
                                     <span class="text-2xl font-bold text-blue-600">{{ $order->table_number ?? '-' }}</span>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <button type="button"
-                                            onclick="window.openOrderDetails('waiter-served-details-{{ $order->id }}')"
-                                            class="text-sm font-semibold text-blue-700 hover:text-blue-900 underline underline-offset-2">
-                                        Detaily:
-                                    </button>
                                     <div class="text-sm font-semibold text-gray-700 bg-white px-3 py-1 rounded-full border">
                                         {{ $order->payment_method === 'card' ? '💳 Karta' : '🧾 Pri pulte' }}
                                         <span class="ml-1 text-green-600">✓</span>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="mt-2">
+                                <button type="button"
+                                        onclick="window.openOrderDetails('waiter-served-details-{{ $order->id }}')"
+                                        class="w-full inline-flex justify-center items-center gap-1 px-3 py-2 text-sm font-semibold text-blue-800 bg-blue-100 border border-blue-300 rounded-lg hover:bg-blue-200 min-h-[42px]">
+                                    <span>📋</span>
+                                    <span>Detaily objednávky</span>
+                                </button>
+                            </div>
                         </div>
 
-                        <dialog id="waiter-served-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
+                        <dialog wire:ignore.self id="waiter-served-details-{{ $order->id }}" class="w-[calc(100%-1.5rem)] sm:w-full max-w-2xl rounded-2xl p-0 backdrop:bg-black/50">
                             <div class="p-5 sm:p-6">
                                 <div class="flex items-start justify-between gap-4 mb-4">
                                     <div>
@@ -385,7 +397,7 @@
 
                         <!-- Order Items -->
                         <div class="p-4">
-                            <div class="space-y-3">
+                            <div class="space-y-3 max-h-64 overflow-y-auto pr-1">
                                 @foreach ($order->items as $item)
                                     <div class="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                                         <div class="flex justify-between items-start mb-1">

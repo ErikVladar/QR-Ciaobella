@@ -4,27 +4,34 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\Order;
+use Carbon\Carbon;
 
 class WaiterOrders extends Component
 {
     public function render()
     {
+        $timezone = config('app.timezone', 'Europe/Bratislava');
+        $today = Carbon::now($timezone)->toDateString();
+
         // Orders that need payment confirmation (counter payment)
         $toPay = Order::with('items.product', 'items.additions')
             ->where('payment_status', 'unpaid')
             ->where('waiter_status', 'to_pay')
+            ->whereDate('created_at', $today)
             ->orderBy('created_at', 'asc')
             ->get();
 
         // Orders ready to be served (kitchen completed them)
         $ready = Order::with('items.product', 'items.additions')
             ->where('waiter_status', 'ready')
+            ->whereDate('created_at', $today)
             ->orderBy('created_at', 'asc')
             ->get();
 
         // Served orders (completed by waiter)
         $served = Order::with('items.product', 'items.additions')
             ->where('waiter_status', 'served')
+            ->whereDate('created_at', $today)
             ->orderBy('updated_at', 'desc')
             ->limit(20)
             ->get();
