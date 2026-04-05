@@ -23,7 +23,7 @@
                     </li>
                     <li class="flex items-start gap-2">
                         <span class="leading-5">✉️</span>
-                        <a href="mailto:veron.micietova@gmail.com" class="hover:text-white">veron.micietova@gmail.com</a>
+                        <a href="mailto:info@ciaobellapizza.sk" class="hover:text-white">info@ciaobellapizza.sk</a>
                     </li>
                 </ul>
             </div>

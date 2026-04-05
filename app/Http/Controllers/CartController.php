@@ -139,7 +139,7 @@ class CartController extends Controller
 
         // Require table number for processing orders
         $request->validate([
-            'table_number' => ['required', 'integer', 'min:1'],
+            'table_number' => ['required', 'string', 'max:50'],
             'payment_method' => ['required', 'in:card,counter'],
         ]);
 
@@ -158,7 +158,7 @@ class CartController extends Controller
             'user_id' => Auth::check() ? Auth::id() : null, // null if guest
             'total' => $total,
             'status' => 'processing',
-            'table_number' => $request->input('table_number'),
+            'table_number' => trim((string) $request->input('table_number')),
             'payment_method' => $paymentMethod,
             'payment_status' => $paymentStatus,
             'waiter_status' => $waiterStatus,

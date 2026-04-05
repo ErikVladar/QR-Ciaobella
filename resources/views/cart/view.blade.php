@@ -106,11 +106,11 @@
                                 <!-- Table Number -->
                                 <div class="flex-1">
                                     <label for="table_number" class="block text-sm font-bold text-gray-700 mb-1">
-                                        Číslo stola <span class="text-red-500">*</span>
+                                        Číslo stola<span class="text-red-500">*</span>
                                     </label>
-                                    <input id="table_number" name="table_number" type="number" min="1" required
+                                    <input id="table_number" name="table_number" type="text" maxlength="50" required
                                         value="{{ old('table_number') }}"
-                                        placeholder="Zadajte číslo stola"
+                                        placeholder=""
                                         class="w-full px-4 py-3 border border-gray-300 rounded-xl font-semibold text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
                                     @error('table_number')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>

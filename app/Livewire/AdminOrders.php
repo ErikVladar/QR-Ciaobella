@@ -85,7 +85,7 @@ class AdminOrders extends Component
         }
 
         if ($this->tableFilter !== '') {
-            $query->where('table_number', $this->tableFilter);
+            $query->where('table_number', 'like', '%' . trim($this->tableFilter) . '%');
         }
 
         if ($this->dateFilter !== '') {

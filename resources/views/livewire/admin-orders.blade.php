@@ -30,10 +30,9 @@
             <label for="table-filter" class="block text-sm font-medium text-gray-700">Stôl</label>
             <input
                 id="table-filter"
-                type="number"
-                min="1"
+                type="text"
                 wire:model.live="tableFilter"
-                placeholder="Napr. 4"
+                placeholder="Napr. 4, A12"
                 class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:border-rose-500 focus:outline-none focus:ring-rose-500"
             >
         </div>
